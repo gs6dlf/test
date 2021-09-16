@@ -5,43 +5,46 @@ import os
 
 
 def var_index_find(var, var_name):
+    k = 0
     for i in range(len(var)):
         if var[i]['var_name'] == var_name:
             return i
-    if i == len(var)-1:
+        k = k+1
+    if k == len(var):
         print('error: %s not find' %var_name)
         return -1
+
 
 parser = argparse.ArgumentParser(description="auto declare wire and reg")
 parser.add_argument('--file_name','-f')
 args = parser.parse_args()
 
 file_name = args.file_name
-shutil.copy(file_name,file_name+'.bak')
+shutil.copy(file_name,file_name+'.dec_bak')
 
 var=[]
 with open(file_name, "r", encoding="utf-8") as f1, open(file_name+'.tmp', "w", encoding="utf-8") as f2:
     for line in f1:
         var_type=''
-        if re.match(r'[\s]*//.*',line) == None and re.search(r'//<\w+.*>',line):
-            s1 = re.search(r'//<(.*)>',line)
+        if re.match(r'[\s]*//.*',line) is None and re.search(r'//\s*<\w+.*>',line):
+            s1 = re.search(r'//\s*<(.*)>',line)
             var_width = s1.group(1).split(',')
             if re.search(r'[\s]*\..*//.*',line):
                 s2 = re.search(r'.*\((.*)\).*//.*',line)
                 s2_sub = re.sub(r'[\s{}]','',s2.group(1))
-                s2_sub = re.sub(r'\[.*?\]','',s2_sub)
-                var_type='wire'
+                s2_sub = re.sub(r'\[.*?]','',s2_sub)
+                var_type = 'wire'
             elif re.search(r'\s*assign.*',line):
                 line_sub = re.sub(r'assign','',line)
                 s2 = re.search(r'\s*(.*?)<?=.*//.*',line_sub)
                 s2_sub = re.sub(r'[\s{}]','',s2.group(1))
-                s2_sub = re.sub(r'\[.*?\]','',s2_sub)
-                var_type='wire'
+                s2_sub = re.sub(r'\[.*?]','',s2_sub)
+                var_type = 'wire'
             else:
                 s2 = re.search(r'(\s+|:\s*)([a-z].*?)<?=.*//.*',line)
                 s2_sub = re.sub(r'[\s{}]','',s2.group(2))
-                s2_sub = re.sub(r'\[.*?\]','',s2_sub)
-                var_type='reg '
+                s2_sub = re.sub(r'\[.*?]','',s2_sub)
+                var_type = 'reg '
             var_name = s2_sub.split(',')
             if len(var_name) > 1 and len(var_width) != len(var_name) :
                 print('error: %s, var num != <num>' % (s2_sub))
@@ -52,7 +55,7 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name+'.tmp', "w", e
                 if len(var_name) == 1 and len(var_width) == 1:
                     var.append({'var_type':var_type, 'var_name':var_name[0], 'var_width':var_width[0]})
                 elif len(var_name) == 1 and len(var_width) > 1:
-                        var.append({'var_type': var_type, 'var_name': var_name[0], 'var_width': var_width})
+                    var.append({'var_type': var_type, 'var_name': var_name[0], 'var_width': var_width})
                 else:
                     var.append({'var_type':var_type, 'var_name':var_name[i], 'var_width':var_width[i]})
 
@@ -60,7 +63,7 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
     flag = 0
     for line in f1:
         if flag == 1:
-            if re.match('\s*//',line):
+            if re.match(r'\s*//',line):
                 flag = 0
                 var_tmp = []
                 for i in range(len(var)):
@@ -92,16 +95,16 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
                 f2.write('////////////////')
             else:
                 continue
-        if re.match(r'\s*input\s+',line):
-            m=re.match(r'\s*input\s+(reg|wire)?\s*(\[.+\])?\s*(\w+.*\n)',line)
-            if m.group(2) == None:
+        if re.match(r'\s*input\s+', line):
+            m=re.match(r'\s*input\s+(reg|wire)?\s*(\[.+])?\s*(\w+.*\n)',line)
+            if m.group(2) is None:
                 tmp = '\tinput wire'
             else:
                 tmp = '\tinput wire %s' % m.group(2)
             line_tmp = '{:<30}\t\t\t{}'.format(tmp, m.group(3))
             f2.write(line_tmp)
         elif re.match(r'\s*output\s+',line):
-            m=re.match(r'\s*output\s+(reg|wire)?\s*(\[.+\])?\s*(\w+)(.*\n)', line)
+            m=re.match(r'\s*output\s+(reg|wire)?\s*(\[.+])?\s*(\w+)(.*\n)', line)
             index = var_index_find(var,m.group(3))
             if isinstance(var[index]['var_width'], list):
                 if var[index]['var_width'][0].isdigit():
