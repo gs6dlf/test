@@ -92,10 +92,10 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
                         tmp ='%s [%s:0]' %(var_tmp[i]['var_type'], index0)
                         line_tmp = '{:<30}\t\t\t{};\n'.format(tmp, var_tmp[i]['var_name'])
                     f2.write(line_tmp)
-                f2.write('////////////////')
+                f2.write('////////////////\n')
             else:
                 continue
-        if re.match(r'\s*input\s+', line):
+        elif re.match(r'\s*input\s+', line):
             m=re.match(r'\s*input\s+(reg|wire)?\s*(\[.+])?\s*(\w+.*\n)',line)
             if m.group(2) is None:
                 tmp = '\tinput wire'
