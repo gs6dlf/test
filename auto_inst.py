@@ -59,20 +59,20 @@ with open(file_inst, "w", encoding="utf-8") as f2:
         f2.write('%s %s_U0 #(\n' %(module_name, module_name))
         for i in range(len(para)):
             if i != len(para)-1:
-                f2.write('\t.%s(%s),\n' %(para[i]['para_name'], para[i]['para_def']))
+                f2.write('    .%s(%s),\n' %(para[i]['para_name'], para[i]['para_def']))
             else:
-                f2.write('\t.%s(%s)\n' %(para[i]['para_name'], para[i]['para_def']))
-        f2.write('\t)(\n')
+                f2.write('    .%s(%s)\n' %(para[i]['para_name'], para[i]['para_def']))
+        f2.write('    )(\n')
     for i in range(len(port)):
         if i != len(port)-1:
             if port[i]['dir'] == 'output':
-                f2.write('\t.%s(%s), //<%s>\n' %(port[i]['port_name'], port[i]['port_name'], port[i]['width']))
+                f2.write('    .%s(%s), //<%s>\n' %(port[i]['port_name'], port[i]['port_name'], port[i]['width']))
             else:
-                f2.write('\t.%s(%s),\n' %(port[i]['port_name'], port[i]['port_name']))
+                f2.write('    .%s(%s),\n' %(port[i]['port_name'], port[i]['port_name']))
         else:
             if port[i]['dir'] == 'output':
-                f2.write('\t.%s(%s) //<%s>\n' %(port[i]['port_name'], port[i]['port_name'], port[i]['width']))
+                f2.write('    .%s(%s) //<%s>\n' %(port[i]['port_name'], port[i]['port_name'], port[i]['width']))
             else:
-                f2.write('\t.%s(%s)\n' %(port[i]['port_name'], port[i]['port_name']))
-    f2.write('\t);\n')
+                f2.write('    .%s(%s)\n' %(port[i]['port_name'], port[i]['port_name']))
+    f2.write('    );\n')
 f2.close()
