@@ -98,9 +98,9 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
         elif re.match(r'\s*input\s+', line):
             m=re.match(r'\s*input\s+(reg|wire)?\s*(\[.+])?\s*(\w+.*\n)',line)
             if m.group(2) is None:
-                tmp = '    input wire'
+                tmp = '    input  wire'
             else:
-                tmp = '    input wire %s' % m.group(2)
+                tmp = '    input  wire %s' % m.group(2)
             line_tmp = '{:<32}    {}'.format(tmp, m.group(3))
             f2.write(line_tmp)
         elif re.match(r'\s*output\s+',line):
