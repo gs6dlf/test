@@ -76,3 +76,4 @@ with open(file_inst, "w", encoding="utf-8") as f2:
                 f2.write('    .%s(%s)\n' %(port[i]['port_name'], port[i]['port_name']))
     f2.write('    );\n')
 f2.close()
+print('finish')
