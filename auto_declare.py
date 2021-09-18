@@ -83,14 +83,14 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
                         else:
                             index1 = var_tmp[i]['var_width'][1] + '-1'
                         tmp = '%s [%s:0]' %(var_tmp[i]['var_type'], index1)
-                        line_tmp = '{:<30}\t\t\t{}[{}:0];\n'.format(tmp, var_tmp[i]['var_name'], index0)
+                        line_tmp = '{:<30}    {}[{}:0];\n'.format(tmp, var_tmp[i]['var_name'], index0)
                     else:
                         if var_tmp[i]['var_width'].isdigit():
                             index0 = '%d' % (int(var_tmp[i]['var_width']) - 1)
                         else:
                             index0 = var_tmp[i]['var_width'] + '-1'
                         tmp ='%s [%s:0]' %(var_tmp[i]['var_type'], index0)
-                        line_tmp = '{:<30}\t\t\t{};\n'.format(tmp, var_tmp[i]['var_name'])
+                        line_tmp = '{:<30}    {};\n'.format(tmp, var_tmp[i]['var_name'])
                     f2.write(line_tmp)
                 f2.write('////////////////\n')
             else:
@@ -98,10 +98,10 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
         elif re.match(r'\s*input\s+', line):
             m=re.match(r'\s*input\s+(reg|wire)?\s*(\[.+])?\s*(\w+.*\n)',line)
             if m.group(2) is None:
-                tmp = '\tinput wire'
+                tmp = '    input wire'
             else:
-                tmp = '\tinput wire %s' % m.group(2)
-            line_tmp = '{:<30}\t\t\t{}'.format(tmp, m.group(3))
+                tmp = '    input wire %s' % m.group(2)
+            line_tmp = '{:<30}    {}'.format(tmp, m.group(3))
             f2.write(line_tmp)
         elif re.match(r'\s*output\s+',line):
             m=re.match(r'\s*output\s+(reg|wire)?\s*(\[.+])?\s*(\w+)(.*\n)', line)
@@ -115,15 +115,15 @@ with open(file_name, "r", encoding="utf-8") as f1, open(file_name + '.tmp', "w",
                     index1 = '%d' %(int(var[index]['var_width'][1]) - 1)
                 else:
                     index1 = var[index]['var_width'][1] + '-1'
-                tmp = '\toutput %s [%s:0]' %(var[index]['var_type'],index1)
-                line_tmp = '{:<30}\t\t\t{}[{}:0] {}'.format(tmp,var[index]['var_name'],index0,m.group(4))
+                tmp = '    output %s [%s:0]' %(var[index]['var_type'],index1)
+                line_tmp = '{:<30}    {}[{}:0] {}'.format(tmp,var[index]['var_name'],index0,m.group(4))
             else:
                 if var[index]['var_width'].isdigit():
                     index0 = '%d' %(int(var[index]['var_width']) - 1)
                 else:
                     index0 = var[index]['var_width']+'-1'
-                tmp ='\toutput %s [%s:0]' %(var[index]['var_type'],index0)
-                line_tmp = '{:<30}\t\t\t{} {}'.format(tmp,var[index]['var_name'],m.group(4))
+                tmp ='    output %s [%s:0]' %(var[index]['var_type'],index0)
+                line_tmp = '{:<30}    {} {}'.format(tmp,var[index]['var_name'],m.group(4))
             f2.write(line_tmp)
             var.pop(index)
         elif re.match(r'\s*//\s*auto_declare\s+',line):
